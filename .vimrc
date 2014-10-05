@@ -3,8 +3,10 @@ set autoindent
 set expandtab
 set shiftwidth=4
 set encoding=utf-8
-
 set nocompatible
+set nowritebackup
+set nobackup
+set noswapfile
 filetype off
 
 if has('vim_starting')
@@ -42,11 +44,29 @@ NeoBundle 'tmhedberg/matchit'
 "NeoBundle 'tell-k/vim-browsereload-mac' MacOnly
 
 " 補完
-NeoBundle 'Shougo/neocomplete.vim'
+NeoBundle has('lua') ? 'Shougo/neocomplete.vim' : 'Shougo/neocomplcache.vim'
 
-"コメント
-NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'Shougo/neocomplcache.vim'
+if neobundle#is_installed('neocomplete.vim')
+    let g:neocomplete#enable_at_startup = 1
+    let g:neocomplete#enable_ignore_case = 1
+    let g:neocomplete#enable_smart_case = 1
+    if !exists('g:neocomplete#keyword_patterns')
+        let g:neocomplete#keyword_patterns = {}
+    endif
+    let g:neocomplete#keyword_patterns._ = '\h\w*'
+elseif neobundle#is_installed('neocomplcache.vim')
+    let g:neocomplcache_enable_at_startup = 1
+    let g:neocomplcache_enable_ignore_case = 1
+    let g:neocomplcache_enable_smart_case = 1
+    if !exists('g:neocomplcache_keyword_patterns')
+        let g:neocomplcache_keyword_patterns = {}
+    endif
+    let g:neocomplcache_keyword_patterns._ = '\h\w*'
+    let g:neocomplcache_enable_camel_case_completion = 1
+    let g:neocomplcache_enable_underbar_completion = 1
+endif
+inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
 " railsサポート
 NeoBundle 'taichouchou2/vim-rails'
@@ -58,7 +78,13 @@ NeoBundle 'basyura/unite-rails'
 NeoBundle 'thinca/vim-ref'
 
 " Python
-NeoBundle 'davidhalter/jedi-vim'
+NeoBundleLazy 'davidhalter/jedi-vim', {
+    \ "autoload": {
+    \   "filetypes": ["python", "python3", "djangohtml"],
+    \ }}
+
+" Go
+NeoBundleLazy 'Blackrush/vim-gocode', {"autoload": {"filetypes": ['go']}}
 
 filetype plugin indent on
 syntax on
@@ -70,6 +96,29 @@ if neobundle#exists_not_installed_bundles()
     echomsg 'Please execute ":NeoBundleInstall" command.'
     finish
 endif
+
+" neocomplete
+let s:hooks = neobundle#get_hooks("neocomplete.vim")
+function! s:hooks.on_source(bundle)
+    let g:acp_enableAtStartup = 0
+    let g:neocomplete#enable_smart_case = 1
+    NeoCompleteEnable
+endfunction
+
+" neocomplcache
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplcache_min_syntax_length = 3
+let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+" Define dictionary.
+let g:neocomplcache_dictionary_filetype_lists = {
+  \ 'default' : ''
+  \ }
 
 """ Common key bind
 nnoremap s <Nop>
@@ -93,8 +142,8 @@ nnoremap sP :<C-u>bp<CR>
 nnoremap st :<C-u>tabnew<CR>
 nnoremap ss :<C-u>sp<CR>
 nnoremap sv :<C-u>vs<CR>
-
-nnoremap ,ut :<C-u>Unite tab<CR>
+nnoremap sf :<C-u>Unite tab<CR>
+nnoremap ff :<C-u>VimFiler -split -simple -winwidth=35 -no-quit<CR>
 "nnoremap sq :<C-u>q<CR>
 "nnoremap sQ :<C-u>bd<CR>
 "nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
