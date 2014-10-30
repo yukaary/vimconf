@@ -10,11 +10,11 @@ set noswapfile
 filetype off
 
 if has('vim_starting')
-    set runtimepath+=$VIM\bundle\neobundle.vim
-    call neobundle#rc(expand('$VIM\bundle'))
+    set runtimepath+=~/.vim/bundle/neobundle.vim
+    call neobundle#rc(expand('~/.vim/bundle'))
 endif
 
-setlocal omnifunc=syntaxcomplete#Complete
+"setlocal omnifunc=syntaxcomplete#Complete
 
 " originalrepos on github
 NeoBundle 'Shougo/neobundle.vim'
@@ -84,8 +84,13 @@ NeoBundleLazy 'davidhalter/jedi-vim', {
     \ }}
 
 " Go
-NeoBundleLazy 'Blackrush/vim-gocode', {"autoload": {"filetypes": ['go']}}
+"NeoBundleLazy 'Blackrush/vim-gocode', {
+"    \ "autoload": {
+"    \   "filetypes": ["go"],
+"    \ }}
+NeoBundle 'Blackrush/vim-gocode', {"autoload": {"filetypes": ['go']}}
 
+filetype plugin on
 filetype plugin indent on
 syntax on
 
@@ -173,6 +178,11 @@ au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
 """ Development environment for Go
 set rtp+=$GOROOT/misc/vim
 exe "set rtp+=".globpath($GOPATH, "src/github.com/nsf/gocode/vim")
+
+if !exists('g:neocomplcache_omni_patterns')
+      let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
 set completeopt=menu,preview
 
 """ Development environment for Python
@@ -187,5 +197,3 @@ if !exists('g:neocomple#force_omni_input_patterns')
 endif
 
 let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
-
-
