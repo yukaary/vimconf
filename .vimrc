@@ -11,7 +11,9 @@ filetype off
 
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim
-    call neobundle#rc(expand('~/.vim/bundle'))
+    call neobundle#begin(expand('~/.vim/bundle/'))
+    NeoBundleFetch 'Shougo/neobundle.vim'
+    call neobundle#end()
 endif
 
 "setlocal omnifunc=syntaxcomplete#Complete
@@ -21,7 +23,14 @@ NeoBundle 'Shougo/neobundle.vim'
 
 " Plugins
 NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimproc.vim'
+NeoBundle 'Shougo/vimproc.vim', {
+          \ 'build' : {
+          \     'windows' : 'make -f make_mingw32.mak',
+          \     'cygwin' : 'make -f make_cygwin.mak',
+          \     'mac' : 'make -f make_mac.mak',
+          \     'unix' : 'make -f make_unix.mak',
+          \    },
+          \ }
 NeoBundle 'Shougo/vimfiler.vim'
 NeoBundle 'VimClojure'
 NeoBundle 'Shougo/vimshell'
