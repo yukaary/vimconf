@@ -21,8 +21,23 @@ endif
 " originalrepos on github
 NeoBundle 'Shougo/neobundle.vim'
 
+" Color Thema
+NeoBundle "vim-scripts/github-theme"
+" solarized
+NeoBundle 'altercation/vim-colors-solarized'
+" " mustang
+NeoBundle 'croaker/mustang-vim'
+" " jellybeans
+NeoBundle 'nanotech/jellybeans.vim'
+" " molokai
+NeoBundle 'tomasr/molokai'
+" Vim Submode
+NeoBundle 'kana/vim-submode'
+
+
 " Plugins
 NeoBundle 'Shougo/unite.vim'
+NeoBundle "ujihisa/unite-colorscheme"
 NeoBundle 'Shougo/vimproc.vim', {
           \ 'build' : {
           \     'windows' : 'make -f make_mingw32.mak',
@@ -51,6 +66,21 @@ NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'tmhedberg/matchit'
 "NeoBundle 'tell-k/vim-browsereload-mac' MacOnly
+
+" Color Scheme
+colorscheme github
+if &term =~ "xterm-256color" || "screen-256color"
+      set t_Co=256
+      set t_Sf=[3%dm
+      set t_Sb=[4%dm
+   elseif &term =~ "xterm-color"
+      set t_Co=8
+      set t_Sf=[3%dm
+      set t_Sb=[4%dm
+   endif
+
+syntax enable
+hi PmenuSel cterm=reverse ctermfg=33 ctermbg=222 gui=reverse guifg=#3399ff guibg=#f0e68c
 
 " 補完
 NeoBundle has('lua') ? 'Shougo/neocomplete.vim' : 'Shougo/neocomplcache.vim'
@@ -167,6 +197,15 @@ nnoremap ff :<C-u>VimFiler -split -simple -winwidth=35 -no-quit<CR>
 "nnoremap sQ :<C-u>bd<CR>
 "nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 "nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
+
+call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
+call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
+call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
+call submode#enter_with('bufmove', 'n', '', 's-', '<C-w>-')
+call submode#map('bufmove', 'n', '', '>', '<C-w>>')
+call submode#map('bufmove', 'n', '', '<', '<C-w><')
+call submode#map('bufmove', 'n', '', '+', '<C-w>+')
+call submode#map('bufmove', 'n', '', '-', '<C-w>-')
 
 """ unite.vim
 " start from insert mode
