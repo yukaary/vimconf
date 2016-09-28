@@ -11,12 +11,15 @@ filetype off
 
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim
-    call neobundle#begin(expand('~/.vim/bundle/'))
+    call neobundle#begin(expand('~/.vim/bundle'))
     NeoBundleFetch 'Shougo/neobundle.vim'
     call neobundle#end()
 endif
 
 "setlocal omnifunc=syntaxcomplete#Complete
+
+
+call neobundle#begin(expand('~/.vim/bundle'))
 
 " originalrepos on github
 NeoBundle 'Shougo/neobundle.vim'
@@ -68,7 +71,7 @@ NeoBundle 'tmhedberg/matchit'
 "NeoBundle 'tell-k/vim-browsereload-mac' MacOnly
 
 " Color Scheme
-colorscheme github
+colorscheme industry
 if &term =~ "xterm-256color" || "screen-256color"
       set t_Co=256
       set t_Sf=[3%dm
@@ -129,6 +132,8 @@ NeoBundleLazy 'davidhalter/jedi-vim', {
 "    \   "filetypes": ["go"],
 "    \ }}
 NeoBundle 'Blackrush/vim-gocode', {"autoload": {"filetypes": ['go']}}
+
+call neobundle#end()
 
 filetype plugin on
 filetype plugin indent on
