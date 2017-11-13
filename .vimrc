@@ -1,13 +1,8 @@
-set tabstop=4
-set autoindent
-set expandtab
-set shiftwidth=4
-set encoding=utf-8
-set nocompatible
-set nowritebackup
-set nobackup
-set noswapfile
 filetype off
+filetype plugin indent off
+
+syntax enable
+hi PmenuSel cterm=reverse ctermfg=33 ctermbg=222 gui=reverse guifg=#3399ff guibg=#f0e68c
 
 if has('vim_starting')
     set runtimepath+=~/.vim/bundle/neobundle.vim
@@ -16,29 +11,21 @@ if has('vim_starting')
     call neobundle#end()
 endif
 
-"setlocal omnifunc=syntaxcomplete#Complete
-
-
 call neobundle#begin(expand('~/.vim/bundle'))
 
 " originalrepos on github
 NeoBundle 'Shougo/neobundle.vim'
 
-" Color Thema
+""" Color Themas - solarized, mustang, jellybeans
 NeoBundle "vim-scripts/github-theme"
-" solarized
 NeoBundle 'altercation/vim-colors-solarized'
-" " mustang
 NeoBundle 'croaker/mustang-vim'
-" " jellybeans
 NeoBundle 'nanotech/jellybeans.vim'
-" " molokai
-NeoBundle 'tomasr/molokai'
-" Vim Submode
+
+""" サブモード導入
 NeoBundle 'kana/vim-submode'
 
-
-" Plugins
+""" よく使うやつ
 NeoBundle 'Shougo/unite.vim'
 NeoBundle "ujihisa/unite-colorscheme"
 NeoBundle 'Shougo/vimproc.vim', {
@@ -50,44 +37,80 @@ NeoBundle 'Shougo/vimproc.vim', {
           \    },
           \ }
 NeoBundle 'Shougo/vimfiler.vim'
-NeoBundle 'VimClojure'
 NeoBundle 'Shougo/vimshell'
-NeoBundle 'Shougo/neosnippet'
 NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'scrooloose/syntastic'
 NeoBundle 'scrooloose/nerdtree' 
-NeoBundle 'Shougo/neosnippet-snippets'
-
-" web
-NeoBundle 'mattn/emmet-vim'
 NeoBundle 'tpope/vim-surround'
-NeoBundle 'open-browser.vim'
-NeoBundle 'mattn/webapi-vim'
 NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'taichouchou2/html5.vim'
 NeoBundle 'kchmck/vim-coffee-script'
 NeoBundle 'Lokaltog/vim-easymotion'
 NeoBundle 'tmhedberg/matchit'
-"NeoBundle 'tell-k/vim-browsereload-mac' MacOnly
+"NeoBundle 'open-browser.vim'
+"NeoBundle 'mattn/emmet-vim'
+"NeoBundle 'mattn/webapi-vim'
+" set unavailable due to namespace conflict
+"NeoBundle 'taichouchou2/html5.vim' 
 
-" Color Scheme
-colorscheme industry
-if &term =~ "xterm-256color" || "screen-256color"
-      set t_Co=256
-      set t_Sf=[3%dm
-      set t_Sb=[4%dm
-   elseif &term =~ "xterm-color"
-      set t_Co=8
-      set t_Sf=[3%dm
-      set t_Sb=[4%dm
-   endif
+""" スニペット
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 
-syntax enable
-hi PmenuSel cterm=reverse ctermfg=33 ctermbg=222 gui=reverse guifg=#3399ff guibg=#f0e68c
+""" ctags
+NeoBundle 'majutsushi/tagbar'
+NeoBundle 'szw/vim-tags'
+NeoBundle 'tpope/vim-endwise'
 
-" 補完
+""" 補完
 NeoBundle has('lua') ? 'Shougo/neocomplete.vim' : 'Shougo/neocomplcache.vim'
 
+""" 辞書機能
+NeoBundle 'thinca/vim-ref'
+
+" Python
+NeoBundleLazy 'davidhalter/jedi-vim', {
+    \ "autoload": {
+    \   "filetypes": ["python", "python3", "djangohtml"],
+    \ }}
+
+call neobundle#end()
+
+""" 編集の設定
+set tabstop=4
+set autoindent
+set expandtab
+set shiftwidth=4
+set encoding=utf-8
+set nocompatible
+set nowritebackup
+set nobackup
+set noswapfile
+
+filetype plugin on
+filetype plugin indent on
+
+""" カラースキーマ
+colorscheme industry
+if &term =~ "xterm-256color" || "screen-256color"
+    set t_Co=256
+    set t_Sf=[3%dm
+    set t_Sb=[4%dm
+elseif &term =~ "xterm-color"
+    set t_Co=8
+    set t_Sf=[3%dm
+    set t_Sb=[4%dm
+endif
+
+" プラグインのインストールチェックメッセージを出す
+if neobundle#exists_not_installed_bundles()
+    echomsg 'Not installed bundles : ' .
+        \ string(neobundle#get_not_installed_bundle_names())
+    echomsg 'Please execute ":NeoBundleInstall" command.'
+    finish
+endif
+
+
+""" 補完設定
 if neobundle#is_installed('neocomplete.vim')
     let g:neocomplete#enable_at_startup = 1
     let g:neocomplete#enable_ignore_case = 1
@@ -111,43 +134,6 @@ endif
 inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
-" railsサポート
-NeoBundle 'taichouchou2/vim-rails'
-NeoBundle 'romanvbabenko/rails.vim'
-NeoBundle 'ujihisa/unite-rake'
-NeoBundle 'basyura/unite-rails'
-
-" reference環境
-NeoBundle 'thinca/vim-ref'
-
-" Python
-NeoBundleLazy 'davidhalter/jedi-vim', {
-    \ "autoload": {
-    \   "filetypes": ["python", "python3", "djangohtml"],
-    \ }}
-
-" Go
-"NeoBundleLazy 'Blackrush/vim-gocode', {
-"    \ "autoload": {
-"    \   "filetypes": ["go"],
-"    \ }}
-NeoBundle 'Blackrush/vim-gocode', {"autoload": {"filetypes": ['go']}}
-
-call neobundle#end()
-
-filetype plugin on
-filetype plugin indent on
-syntax on
-
-" Installation check.
-if neobundle#exists_not_installed_bundles()
-    echomsg 'Not installed bundles : ' .
-        \ string(neobundle#get_not_installed_bundle_names())
-    echomsg 'Please execute ":NeoBundleInstall" command.'
-    finish
-endif
-
-" neocomplete
 let s:hooks = neobundle#get_hooks("neocomplete.vim")
 function! s:hooks.on_source(bundle)
     let g:acp_enableAtStartup = 0
@@ -155,7 +141,6 @@ function! s:hooks.on_source(bundle)
     NeoCompleteEnable
 endfunction
 
-" neocomplcache
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplcache.
@@ -170,7 +155,7 @@ let g:neocomplcache_dictionary_filetype_lists = {
   \ 'default' : ''
   \ }
 
-" vimfiler
+""" vimfiler
 let g:vimfiler_as_default_explorer = 1
 let g:vimfiler_safe_mode_by_default = 0
 
@@ -203,6 +188,8 @@ nnoremap ff :<C-u>VimFiler -split -simple -winwidth=35 -no-quit<CR>
 "nnoremap sb :<C-u>Unite buffer_tab -buffer-name=file<CR>
 "nnoremap sB :<C-u>Unite buffer -buffer-name=file<CR>
 
+nnoremap fg :NERDTreeToggle<CR>
+
 call submode#enter_with('bufmove', 'n', '', 's>', '<C-w>>')
 call submode#enter_with('bufmove', 'n', '', 's<', '<C-w><')
 call submode#enter_with('bufmove', 'n', '', 's+', '<C-w>+')
@@ -233,16 +220,6 @@ au FileType unite nnoremap <silent> <buffer> <ESC><ESC> :q<CR>
 au FileType unite inoremap <silent> <buffer> <ESC><ESC> <ESC>:q<CR>
 
 
-""" Development environment for Go
-set rtp+=$GOROOT/misc/vim
-exe "set rtp+=".globpath($GOPATH, "src/github.com/nsf/gocode/vim")
-
-if !exists('g:neocomplcache_omni_patterns')
-      let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
-set completeopt=menu,preview
-
 """ Development environment for Python
 autocmd FileType python setlocal omnifunc=jedi#completions
 
@@ -255,3 +232,24 @@ if !exists('g:neocomple#force_omni_input_patterns')
 endif
 
 let g:neocomplete#force_omni_input_patterns.python = '\h\w*\|[^. \t]\.\w*'
+
+let g:syntastic_python_checkers = ["python3","flake8"]
+
+""" tagbar
+if ! empty(neobundle#get("tagbar"))
+      let g:tagbar_width = 20
+      nn <silent> <leader>t :TagbarToggle<CR>
+endif
+
+""" ctags
+let g:vim_tags_project_tags_command = "/usr/bin/ctags -f .tags -R . 2>/dev/null"
+let g:vim_tags_auto_generate = 1
+set tags+=.tags
+
+if has("path_extra")
+    set tags+=tags;
+endif
+
+"nnoremap <C-]> g<C-]>
+nnoremap <C-]> <C-w><C-]><C-w>T
+
